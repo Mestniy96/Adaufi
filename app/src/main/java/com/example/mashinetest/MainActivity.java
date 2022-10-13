@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,12 +19,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -55,6 +59,11 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        slider=findViewById(R.id.slider);
+        slider.addOnChangeListener((slider, value, fromUser) -> {
+            ((TextView) findViewById(R.id.textView)).setText(getResources()
+                    .getString(R.string.x0_x1f,slider.getValues().get(0) ,slider.getValues().get(1)));
+        });
 
 //Инициализация кнопки перехода
         btnActTwo = findViewById(R.id.btnActTwo);// Кнопка перехода в 2 меню
@@ -65,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         upmash = findViewById(R.id.upmash);
         downug = findViewById(R.id.downug);
         downmash = findViewById(R.id.downmash);
+
 
 
         btnActTwo.setOnClickListener(this);
@@ -128,13 +138,18 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
    @SuppressLint("MissingPermission") String stInfo = bluetoothAdapter.getName() + " " + bluetoothAdapter.getAddress();
         textinfo.setText(String.format("Это устройство: %s", stInfo));
+        Log.e(TAG, "onCreate: " + stInfo );
+
     }
+
+    private static final String TAG = "MainActivity";
 
     @SuppressLint("MissingPermission")
     @Override
     protected void onStart() { // Запрос на включение Bluetooth
         super.onStart();
         if (!bluetoothAdapter.isEnabled()) {
+            Log.e(TAG, "onStart: " + BluetoothAdapter.ACTION_REQUEST_ENABLE);
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
@@ -355,31 +370,56 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
     }
 
+
     @Override
     public void onClick(View v) {
         int ElUpPl = 0;
         int ElDownMin = 0;
-        int ZadX0 = 0;
         int ZadX1 = 0;
+        int ZadX0 = 0;
 
 
-        switch (v.getId()){
-            case R.id.btnActTwo:
-                ButPanel.setVisibility(View.GONE);
-                ButPanel2.setVisibility(View.VISIBLE);
-                break;
-            case R.id.btnActOne:
-                ButPanel2.setVisibility(View.GONE);
-                ButPanel.setVisibility(View.VISIBLE);
-                break;
-            case R.id.button23:
-                    ZadX0-=10;
-                EditTextZadX0.setText(Integer.toString(ZadX0));
-                break;
-            case R.id.button22:
-                    ZadX0+=10;
-                EditTextZadX0.setText(Integer.toString(ZadX0));
-                break;
+        int id = v.getId();
+        if (id == R.id.btnActTwo) {
+            ButPanel.setVisibility(View.GONE);
+            ButPanel2.setVisibility(View.VISIBLE);
+        } else if (id == R.id.btnActOne) {
+            ButPanel2.setVisibility(View.GONE);
+            ButPanel.setVisibility(View.VISIBLE);
+        } else if (id == R.id.button23) {
+            ZadX0 = Integer.parseInt(EditTextZadX0.getText().toString());
+            if (ZadX0 != 0)
+                ZadX0 -= 10;
+            EditTextZadX0.setText(String.format(Locale.getDefault(), "%d", ZadX0));
+        } else if (id == R.id.button22) {
+            ZadX0 = Integer.parseInt(EditTextZadX0.getText().toString());
+            if (ZadX0 != 100)
+                ZadX0 += 10;
+            EditTextZadX0.setText(String.format(Locale.getDefault(), "%d", ZadX0));
+        } else if (id == R.id.button4) {
+            List<Float> floatList = slider.getValues();
+            if(floatList.get(0)!=0f){
+                floatList.set(0,floatList.get(0)-10f);
+                slider.setValues(floatList);
+            }
+        } else if (id == R.id.button3) {
+            List<Float> floatList = slider.getValues();
+            if (floatList.get(0) != 100f) {
+                floatList.set(0, floatList.get(0) + 10f);
+                slider.setValues(floatList);
+            }
+        }else if (id == R.id.button6) {
+            List<Float> floatList = slider.getValues();
+            if(floatList.get(1)!=0f){
+                floatList.set(1,floatList.get(1)-10f);
+                slider.setValues(floatList);
+            }
+        } else if (id == R.id.button5) {
+            List<Float> floatList = slider.getValues();
+            if (floatList.get(1) != 100f) {
+                floatList.set(1, floatList.get(1) + 10f);
+                slider.setValues(floatList);
+            }
         }
     }
 }

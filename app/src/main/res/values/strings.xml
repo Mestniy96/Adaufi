@@ -7,6 +7,7 @@
     <string name="minusx1">-</string>
     <string name="plusx1">+</string>
     <string name="x0_x1">Диапазон штока X0-X1</string>
+    <string name="x0_x1f">Диапазон штока X0-X1 %.0f-%.0f</string>
     <string name="stop">STOP</string>
     <string name="pause_play">Pause/Play</string>
     <string name="minusx2">-</string>
