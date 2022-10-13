@@ -9,14 +9,14 @@
     tools:context=".MainActivity"
     android:contextClickable="true">
 
-        <TextView
-            android:id="@+id/textinfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="xxx"
-            android:textSize="22dp"
-            android:visibility="visible" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textinfo"
+        android:textSize="22dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:visibility="visible"/>
     <ListView
         android:layout_width="250dp"
         android:layout_height="wrap_content"
